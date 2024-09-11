@@ -3,11 +3,14 @@ import email
 from email.header import decode_header
 from langchain_community.document_loaders import UnstructuredEmailLoader
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Set your email credentials
 IMAP_SERVER = "imap.gmail.com"  # For Gmail, this is the server. Adjust for other services.
-EMAIL = os.getenv("EMAIL")
-PASSWORD = os.getenv("PASSWORD")
+EMAIL = os.getenv("GMAIL_EMAIL")
+PASSWORD = os.getenv("GMAIL_PASSWORD")
 
 # Connect to the server
 mail = imaplib.IMAP4_SSL(IMAP_SERVER)

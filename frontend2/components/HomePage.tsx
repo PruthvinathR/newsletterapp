@@ -3,16 +3,32 @@ import { Input } from "../components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Check } from 'lucide-react'
 import Image from 'next/image' // Add this import
+import { ArrowDown } from 'lucide-react' // Import an arrow icon
+import { useEffect, useState } from 'react'; // Add this import
 
 interface HomePageProps {
   setIsSignUpOpen: (isOpen: boolean) => void;
 }
 
 export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
+  const [marginTop, setMarginTop] = useState('50vh'); // Initialize state for marginTop
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newMarginTop = window.innerHeight * 0.2; // Calculate dynamic margin
+      setMarginTop(`${newMarginTop}px`);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call on mount to set initial value
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
-      <section className="container mx-auto px-4 py-20 text-center">
-        <Image src="/images/logo_white.svg" alt="Contexti.fyi Logo" width={200} height={50} className="mx-auto mb-4" /> {/* Updated logo path */}
+      <section className="container mx-auto px-4 py-20 text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+        <Image src="/images/logo_white.svg" alt="Contexti.fyi Logo" width={200} height={50} className="mx-auto mb-4" />
         <h1 className="text-5xl font-bold mb-4">Say no to an<br />OVERWHELMING INBOX</h1>
         <p className="text-xl mb-8">Read only what matters<br />Stay ahead while saving 10+ hours a week</p>
         <div className="max-w-md mx-auto relative">
@@ -30,15 +46,23 @@ export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
         </div>
       </section>
 
-      <section id="how-it-works" className="container mx-auto px-4 py-20">
+      {/* Down Arrow Indicator */}
+      <div className="flex justify-center mb-4 fixed bottom-4 left-1/2 transform -translate-x-1/2">
+        <ArrowDown 
+          className="h-8 w-8 text-white animate-bounce cursor-pointer" 
+          onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} 
+        />
+      </div>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="container mx-auto px-4 py-20" style={{ marginTop }}>
         <h2 className="text-3xl font-bold text-center mb-8">How it works</h2>
-        <div className="aspect-w-16 aspect-h-9">
+        <div className="relative">
           <iframe 
             src="https://www.youtube.com/embed/5i0Z0E5yaYI" 
-            frameBorder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowFullScreen
-            className="rounded-lg shadow-lg"
+            className="w-full h-full rounded-lg shadow-lg aspect-video" // Updated classes for responsiveness and aspect ratio
           ></iframe>
         </div>
       </section>

@@ -43,7 +43,6 @@ export function AppPage() {
   }
 
   const handleSignUp = () => {
-    // Add your sign-up logic here
     localStorage.setItem('userToken', 'dummy-token'); // Simulate successful sign-up
     setIsLoggedIn(true);
     setCurrentPage('loggedIn');
@@ -51,7 +50,7 @@ export function AppPage() {
   }
 
   return (
-    <div className={`min-h-screen ${isLoggedIn ? 'bg-white text-black' : 'bg-black text-white'}`}>
+    <div className={`min-h-screen bg-black text-white`}>
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Image src={isLoggedIn ? "/images/logo_black.svg" : "/images/logo_white.svg"} alt="Contexti.fyi Logo" width={200} height={50} />
@@ -67,7 +66,7 @@ export function AppPage() {
             <DialogTrigger asChild>
               <Button variant="outline">Account</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-white text-black"> {/* Ensure bg-white is set here */}
+            <DialogContent className="sm:max-w-[425px] bg-white text-black">
               <DialogHeader>
                 <DialogTitle>Account Management</DialogTitle>
               </DialogHeader>
@@ -99,6 +98,7 @@ export function AppPage() {
       {currentPage === 'loggedIn' && <LoggedInPage />}
       {currentPage === 'output' && <OutputPage />}
 
+      {/* Sign Up Dialog */}
       <Dialog open={isSignUpOpen} onOpenChange={setIsSignUpOpen}>
         <DialogContent className="sm:max-w-[425px] bg-white text-black">
           <DialogHeader>
@@ -119,7 +119,7 @@ export function AppPage() {
             </div>
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <Input type="password" placeholder="Password" />
-            <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={handleSignUp}>Sign up</Button> {/* Updated to call handleSignUp */}
+            <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={handleSignUp}>Sign up</Button>
           </div>
           <p className="text-center text-sm">
             Already have an account?{" "}
@@ -133,6 +133,7 @@ export function AppPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Sign In Dialog */}
       <Dialog open={isSignInOpen} onOpenChange={setIsSignInOpen}>
         <DialogContent className="sm:max-w-[425px] bg-white text-black">
           <DialogHeader>

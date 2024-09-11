@@ -20,3 +20,7 @@ This project is a newsletter application built using React for the frontend and 
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run the Flask application: `python app.py`
 
+### Installing system dependencies
+1. brew install libmagic
+2. /Applications/Python\ 3.11/Install\ Certificates.command
+

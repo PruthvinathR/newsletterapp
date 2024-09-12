@@ -81,7 +81,7 @@ export default function LoggedInPage() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8 bg-white"> // Added bg-white class
+    <main className="container mx-auto px-4 py-8 bg-white text-black">
       <h1 className="text-4xl font-bold text-center mb-4">CONTEXTI.FYI</h1>
       <p className="text-center mb-4">One email ID to rule them all!</p>
       
@@ -101,7 +101,7 @@ export default function LoggedInPage() {
         </Button>
       </div>
 
-      <p className="text-center mb-8">
+      <p className="text-center mb-8 text-black">
         Use your dedicated email ID to sign-up for newsletters<br />
         Clean inbox = Happy you!
       </p>
@@ -187,7 +187,7 @@ export default function LoggedInPage() {
                     </div>
                     <div>
                       <h3 className="font-bold">{newsletter.name}</h3>
-                      <p className="text-sm text-gray-500">{newsletter.description}</p>
+                      <p className="text-sm text-gray-700">{newsletter.description}</p> // Changed text color to dark gray
                     </div>
                     <div className="text-xs text-gray-400 ml-auto">3d ago</div>
                   </div>
@@ -238,7 +238,9 @@ export default function LoggedInPage() {
       </Tabs>
 
       <h2 className="text-2xl font-bold mb-4">Recommended</h2>
-      <p className="mb-4">One-click subscribe. Stay informed with no added effort.</p>
+      <p className="mb-4 text-black"> // Changed text color to black
+        One-click subscribe. Stay informed with no added effort.
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {recommendedNewsletters.map(newsletter => (

@@ -36,8 +36,8 @@ export function AppPage() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       // Check if userCredential is valid
       if (userCredential) {
-        setIsLoggedIn(true);
-        setCurrentPage('loggedIn');
+        setIsLoggedIn(true); // Move this line inside the if block
+        setCurrentPage('loggedIn'); // Move this line inside the if block
         setIsSignInOpen(false); // Close the sign-in dialog
       }
     } catch (error) {
@@ -54,10 +54,13 @@ export function AppPage() {
 
   const handleSignUp = async (email: string, password: string) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setIsLoggedIn(true);
-      setCurrentPage('loggedIn');
-      setIsSignUpOpen(false); // Close the sign-up dialog
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Check if userCredential is valid
+      if (userCredential) {
+        setIsLoggedIn(true);
+        setCurrentPage('loggedIn');
+        setIsSignUpOpen(false); // Close the sign-up dialog
+      }
     } catch (error) {
       console.error("Error signing up:", error);
     }
@@ -77,14 +80,14 @@ export function AppPage() {
   };
 
   return (
-    <div className={`min-h-screen bg-black text-white`}>
+    <div className={`min-h-screen ${currentPage === 'loggedIn' ? 'bg-white' : 'bg-black'} text-white`}>
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Image src={isLoggedIn ? "/images/logo_black.svg" : "/images/logo_white.svg"} alt="Contexti.fyi Logo" width={200} height={50} />
           {isLoggedIn && (
             <div className="flex space-x-4">
-              <Button variant="ghost" onClick={() => setCurrentPage('loggedIn')}>Input</Button>
-              <Button variant="ghost" onClick={() => setCurrentPage('output')}>Output</Button>
+              <Button variant="ghost" className={currentPage === 'home' ? "text-white" : "text-black"}>Input</Button> // Change text color based on currentPage
+              <Button variant="ghost" className={currentPage === 'home' ? "text-white" : "text-black"}>Output</Button> // Change text color based on currentPage
             </div>
           )}
         </div>

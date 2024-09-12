@@ -7,6 +7,7 @@ import { ArrowDown } from 'lucide-react' // Import an arrow icon
 import { useEffect, useState } from 'react'; // Add this import
 import { auth } from '../config/firebaseConfig'; // Import the auth instance
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRef } from 'react'; // Add this import
 
 interface HomePageProps {
   setIsSignUpOpen: (isOpen: boolean) => void;
@@ -27,26 +28,21 @@ export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleSignUp = async (email: string, password: string) => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      // Handle successful sign-up (e.g., redirect or show a message)
-    } catch (error) {
-      console.error("Error signing up:", error);
-    }
-  };
-
-  const handleSignIn = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Handle successful sign-in (e.g., redirect or show a message)
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
-  };
+  const howItWorksRef = useRef<HTMLDivElement>(null); // Create a ref for the How It Works section
+  const pricingRef = useRef<HTMLDivElement>(null); // Create a ref for the Pricing section
 
   return (
     <>
+      <nav className="flex justify-center space-x-4 mb-4">
+        <Button onClick={() => howItWorksRef.current?.scrollIntoView({ behavior: 'smooth' })}>
+          How it works
+        </Button>
+        <Button onClick={() => pricingRef.current?.scrollIntoView({ behavior: 'smooth' })}>
+          Pricing
+        </Button>
+        <Button onClick={() => setIsSignUpOpen(true)}>Get Started</Button> {/* Moved Get Started button here */}
+      </nav>
+
       <section className="container mx-auto px-4 py-20 text-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
         <Image src="/images/logo_white.svg" alt="Contexti.fyi Logo" width={200} height={50} className="mx-auto mb-4" />
         <h1 className="text-5xl font-bold mb-4">Say no to an<br />OVERWHELMING INBOX</h1>
@@ -75,7 +71,7 @@ export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
       </div>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="container mx-auto px-4 py-20" style={{ marginTop }}>
+      <section ref={howItWorksRef} id="how-it-works" className="container mx-auto px-4 py-20" style={{ marginTop }}>
         <h2 className="text-3xl font-bold text-center mb-8">How it works</h2>
         <div className="relative">
           <iframe 
@@ -87,7 +83,7 @@ export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
         </div>
       </section>
 
-      <section id="pricing" className="container mx-auto px-4 py-20">
+      <section ref={pricingRef} id="pricing" className="container mx-auto px-4 py-20">
         <h2 className="text-3xl font-bold text-center mb-8">Pricing Plans</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {[

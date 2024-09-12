@@ -5,6 +5,23 @@ import { Check } from 'lucide-react'
 import Image from 'next/image' // Add this import
 import { ArrowDown } from 'lucide-react' // Import an arrow icon
 import { useEffect, useState } from 'react'; // Add this import
+// import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
+import { auth } from '../config/firebaseConfig'; // Import the auth instance
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCqULFAhYUMvmvqcKa4m8DFIlMKYn-MGqA",
+//   authDomain: "contextifyi.firebaseapp.com",
+//   projectId: "contextifyi",
+//   storageBucket: "contextifyi.appspot.com",
+//   messagingSenderId: "355086982939",
+//   appId: "1:355086982939:web:ec2405355eca241f62fdbe",
+//   measurementId: "G-3NP123RYQT"
+// };
+
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
 
 interface HomePageProps {
   setIsSignUpOpen: (isOpen: boolean) => void;
@@ -24,6 +41,24 @@ export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleSignUp = async (email: string, password: string) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      // Handle successful sign-up (e.g., redirect or show a message)
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
+
+  const handleSignIn = async (email: string, password: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Handle successful sign-in (e.g., redirect or show a message)
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
+  };
 
   return (
     <>
@@ -96,6 +131,10 @@ export default function HomePage({ setIsSignUpOpen }: HomePageProps) {
           ))}
         </div>
       </section>
+
+      {/* Sign Up and Sign In Buttons */}
+      <Button onClick={() => handleSignUp('user@example.com', 'password123')}>Sign Up</Button>
+      <Button onClick={() => handleSignIn('user@example.com', 'password123')}>Sign In</Button>
     </>
   )
 }

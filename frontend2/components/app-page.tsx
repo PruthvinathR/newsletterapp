@@ -9,6 +9,8 @@ import HomePage from './HomePage'
 import LoggedInPage from './LoggedInPage'
 import OutputPage from './OutputPage'
 import { Input } from "../components/ui/input"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Import Firebase auth methods
+import { auth } from '../config/firebaseConfig'; // Import the auth instance
 
 export function AppPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -17,6 +19,7 @@ export function AppPage() {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const [isSignInOpen, setIsSignInOpen] = useState(false)
   const [isAccountDialogOpen, setIsAccountDialogOpen] = useState(false)
+  const [password, setPassword] = useState(''); // Add this line
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
@@ -28,12 +31,19 @@ export function AppPage() {
     }
   }, [])
 
-  const handleLogin = () => {
-    localStorage.setItem('userToken', 'dummy-token');
-    setIsLoggedIn(true);
-    setCurrentPage('loggedIn');
-    setIsSignInOpen(false); // Close the sign-in dialog
-  }
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // Check if userCredential is valid
+      if (userCredential) {
+        setIsLoggedIn(true);
+        setCurrentPage('loggedIn');
+        setIsSignInOpen(false); // Close the sign-in dialog
+      }
+    } catch (error) {
+      console.error("Error signing in:", error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('userToken')
@@ -42,12 +52,29 @@ export function AppPage() {
     setIsAccountDialogOpen(false)
   }
 
-  const handleSignUp = () => {
-    localStorage.setItem('userToken', 'dummy-token'); // Simulate successful sign-up
-    setIsLoggedIn(true);
-    setCurrentPage('loggedIn');
-    setIsSignUpOpen(false); // Close the sign-up dialog
-  }
+  const handleSignUp = async (email: string, password: string) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      setIsLoggedIn(true);
+      setCurrentPage('loggedIn');
+      setIsSignUpOpen(false); // Close the sign-up dialog
+    } catch (error) {
+      console.error("Error signing up:", error);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      // User signed up successfully
+      setIsLoggedIn(true);
+      setCurrentPage('loggedIn');
+      setIsSignUpOpen(false); // Close the sign-up dialog
+    } catch (error) {
+      console.error("Error signing up with Google:", error);
+    }
+  };
 
   return (
     <div className={`min-h-screen bg-black text-white`}>
@@ -105,7 +132,7 @@ export function AppPage() {
             <DialogTitle>Sign up</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={handleGoogleSignUp}>
               <Image src="/images/google_logo.svg" alt="Google logo" width={20} height={20} className="mr-2" />
               Sign up with Google
             </Button>
@@ -118,8 +145,8 @@ export function AppPage() {
               </div>
             </div>
             <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input type="password" placeholder="Password" />
-            <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={handleSignUp}>Sign up</Button>
+            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} /> 
+            <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={() => handleSignUp(email, password)}>Sign up</Button>
           </div>
           <p className="text-center text-sm">
             Already have an account?{" "}
@@ -154,7 +181,7 @@ export function AppPage() {
             </div>
             <Input type="email" placeholder="Email" />
             <Input type="password" placeholder="Password" />
-            <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={handleLogin}>Sign in</Button>
+            <Button className="w-full bg-black text-white hover:bg-gray-800" onClick={() => handleLogin(email, password)}>Sign in</Button>
           </div>
         </DialogContent>
       </Dialog>

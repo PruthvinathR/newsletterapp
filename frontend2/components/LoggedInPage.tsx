@@ -81,7 +81,7 @@ export default function LoggedInPage() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8 bg-white"> // Added bg-white class
       <h1 className="text-4xl font-bold text-center mb-4">CONTEXTI.FYI</h1>
       <p className="text-center mb-4">One email ID to rule them all!</p>
       

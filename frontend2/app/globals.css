@@ -14,7 +14,16 @@
   }
 }
 
+html, body {
+  height: 100%; /* Ensure the body takes full height */
+  width: 100%; /* Ensure the body takes full width */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  overflow-x: hidden; 
+}
+
 body {
+  position: relative; /* Added to position the overlay */
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
@@ -22,6 +31,18 @@ body {
   background-size: cover; /* Ensures the image covers the entire background */
   background-position: center; /* Centers the image */
   background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+body::after {
+  content: ""; /* Required for pseudo-element */
+  position: absolute; /* Positioning the overlay */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75); /* Black box with 75% opacity */
+  pointer-events: none; /* Allows clicks to pass through */
+  z-index: -1; /* Ensure the overlay is below other elements */
 }
 
 @layer utilities {
@@ -92,5 +113,32 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+main {
+  min-height: 100vh; /* Ensure the main content takes at least full viewport height */
+  display: flex; /* Use flexbox to fill the space */
+  flex-direction: column; /* Stack children vertically */
+  width: 100%; /* Ensure main takes full width of its parent */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+  box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.how-it-works {
+  margin-top: 250px !important; /* Force margin to apply */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .how-it-works {
+    margin-top: 150px !important; /* Adjust margin for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .how-it-works {
+    margin-top: 100px !important; /* Further adjust for very small screens */
   }
 }

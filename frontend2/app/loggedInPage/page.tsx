@@ -27,7 +27,6 @@ const newsletters = [
   { id: 11, name: 'The Ringer', description: 'Sports and pop culture', categories: ['Sports', 'Entertainment'], subscribed: false },
   { id: 12, name: 'The Muse', description: 'Career advice and job listings', categories: ['Career', 'Business'], subscribed: false },
   { id: 13, name: 'The Hustle', description: 'Tech and business news', categories: ['Tech', 'Business'], subscribed: false },
-  { id: 14, name: 'The Verge', description: 'Technology news and reviews', categories: ['Tech', 'Reviews'], subscribed: false },
 ];
 
 const recommendedNewsletters = [

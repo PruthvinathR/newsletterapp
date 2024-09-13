@@ -1,4 +1,6 @@
 from newsletter_app import db
+from newsletter_app.models.news_letter import NewsLetter
+from newsletter_app.models.user_newsletter import UserNewsletter
 
 
 class User(db.Model):
@@ -9,6 +11,7 @@ class User(db.Model):
     last_name = db.Column("lastname", db.String(255), nullable=False)
     email = db.Column("email", db.String(255), nullable=False, unique=True)
     password = db.Column("password", db.String(255), nullable=False)
+    subscriptions = db.relationship("NewsLetter", secondary='user_newsletter', back_populates="subscribers", passive_deletes=True)
 
     def __init__(self, first_name, last_name, email, password):
         self.first_name = first_name
@@ -22,5 +25,6 @@ class User(db.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
-            'password': self.password
+            'password': self.password,
+            'subscriptions': [subscription.to_dict() for subscription in self.subscriptions]
         }

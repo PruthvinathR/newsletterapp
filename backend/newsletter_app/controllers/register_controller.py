@@ -24,3 +24,16 @@ def get_users():
     users = db.session.query(user.User).all()
     users_list = [u.to_dict() for u in users]  # Convert user objects to dictionaries
     return jsonify(users_list), 200
+
+
+@register_blueprint.route('/users/subscribe', methods=['POST'])
+def add_subscription():
+    data = request.json
+    user_id = data['user_id']
+    newsletter_id = data['newsletter_id']
+    user = db.session.query(user.User).filter_by(id=user_id).first()
+    newsletter = db.session.query(newsletter.NewsLetter).filter_by(id=newsletter_id).first()
+    user.subscriptions.append(newsletter)
+    db.session.commit()
+    return jsonify({'message': 'Subscription added!'}), 200
+

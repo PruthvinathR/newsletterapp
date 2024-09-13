@@ -26,5 +26,5 @@ class User(db.Model):
             'last_name': self.last_name,
             'email': self.email,
             'password': self.password,
-            'subscriptions': [subscription.to_dict() for subscription in self.subscriptions]
+            'subscriptions': [subscription.title for subscription in self.subscriptions]
         }

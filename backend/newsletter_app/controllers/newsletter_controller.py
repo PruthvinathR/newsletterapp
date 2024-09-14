@@ -2,6 +2,7 @@ from newsletter_app.models import news_letter
 from flask import request, jsonify
 from newsletter_app import db
 from flask import Blueprint
+from newsletter_app.utilities import read_emails, summarize_emails
 
 
 newsletter_blueprint = Blueprint('newsletter', __name__)
@@ -21,4 +22,18 @@ def get_newsletters():
     newsletters = db.session.query(news_letter.NewsLetter).all()
     newsletters_list = [n.to_dict() for n in newsletters]
     return jsonify(newsletters_list), 200
+
+
+@newsletter_blueprint.route('/summarize-newsletters', methods=['GET'])
+def summarize_newsletters():
+    # data = request.get_json()
+    emails = read_emails.read_emails()
+    email_summaries = []
+
+    for email in emails:
+        response_summary = summarize_emails.summarize(email)
+        email_summaries.append({"subject": email["subject"], "summary": response_summary.content})
+
+    
+    return jsonify(email_summaries), 200
 

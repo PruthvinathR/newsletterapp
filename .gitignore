@@ -7,4 +7,6 @@ backend/__pycache__
 backend/newsletter_app/__pycache__
 backend/newsletter_app/controllers/__pycache__
 backend/newsletter_app/models/__pycache__
+**/__pycache__/
+
 .DS_Store

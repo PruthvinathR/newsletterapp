@@ -2,7 +2,7 @@ from newsletter_app.models import news_letter
 from flask import request, jsonify
 from newsletter_app import db
 from flask import Blueprint
-from newsletter_app.utilities import read_emails, summarize_emails
+from newsletter_app.utilities import read_emails, summarize_emails, send_email
 
 
 newsletter_blueprint = Blueprint('newsletter', __name__)
@@ -34,6 +34,7 @@ def summarize_newsletters():
         response_summary = summarize_emails.summarize(email)
         email_summaries.append({"subject": email["subject"], "summary": response_summary.content})
 
-    
+    send_email.send_email(email_summaries)
+
     return jsonify(email_summaries), 200
 

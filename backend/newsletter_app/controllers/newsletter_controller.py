@@ -29,12 +29,15 @@ def summarize_newsletters():
     # data = request.get_json()
     emails = read_emails.read_emails()
     email_summaries = []
+    email_comparisons = ''
 
     for email in emails:
         response_summary = summarize_emails.summarize(email)
         email_summaries.append({"subject": email["subject"], "summary": response_summary.content})
 
-    send_email.send_email(email_summaries)
+    email_comparisons = summarize_emails.email_comparison(emails)
+
+    send_email.send_email(email_summaries, email_comparisons.content)
 
     return jsonify(email_summaries), 200
 

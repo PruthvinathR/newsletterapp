@@ -1,7 +1,6 @@
 
 backend/venv/
 backend/.env
-backend/migrations
 backend/instance
 backend/__pycache__
 backend/newsletter_app/__pycache__

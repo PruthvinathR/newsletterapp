@@ -3,9 +3,15 @@
 from newsletter_app.models import user
 
 from flask import request, jsonify
-from newsletter_app import db
+from newsletter_app import db, pwd_context
 
 from flask import Blueprint
+
+from newsletter_app.controllers.schemas.user import UserCreateSchema, UserSchema
+from marshmallow import ValidationError
+
+from flask_jwt_extended import create_access_token, create_refresh_token
+
 
 register_blueprint = Blueprint('register', __name__)
 
@@ -13,10 +19,39 @@ register_blueprint = Blueprint('register', __name__)
 @register_blueprint.route('/register', methods=['POST'])
 def create_user():
     data = request.json
-    new_user = user.User(first_name=data['first_name'], last_name=data['last_name'], email=data['email'], password=data['password'])
-    db.session.add(new_user)
+
+    schema = UserCreateSchema()
+
+    user_data = schema.load(data, session=db.session)
+    db.session.add(user_data)
     db.session.commit()
-    return jsonify({'message': 'New user created!'}), 201
+
+    schema = UserSchema()
+
+    return jsonify({'message': 'New user created!', 'user': schema.dump(user_data)}), 201
+
+
+@register_blueprint.errorhandler(ValidationError)
+def handle_validation_error(error):
+    return jsonify(error.messages), 400
+
+
+@register_blueprint.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    user_found = user.User.query.filter_by(email=email).first()
+
+    if not user_found or not pwd_context.verify(password, user_found.password):
+        return jsonify({'message': 'Invalid credentials'}), 400
+
+    access_token = create_access_token(identity=user_found.id)
+    refresh_token = create_refresh_token(identity=user_found.id)
+
+    return jsonify({'access_token': access_token, 'refresh_token': refresh_token}), 200
+    
 
 
 @register_blueprint.route('/users', methods=['GET'])

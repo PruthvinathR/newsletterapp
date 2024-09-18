@@ -1,6 +1,6 @@
 
 
-from newsletter_app.models import user
+from newsletter_app.models import user, auth
 
 from flask import request, jsonify
 from newsletter_app import db, pwd_context
@@ -10,7 +10,9 @@ from flask import Blueprint
 from newsletter_app.controllers.schemas.user import UserCreateSchema, UserSchema
 from marshmallow import ValidationError
 
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, decode_token
+from datetime import datetime
+from newsletter_app import config
 
 
 register_blueprint = Blueprint('register', __name__)
@@ -36,6 +38,18 @@ def handle_validation_error(error):
     return jsonify(error.messages), 400
 
 
+def add_token_to_database(access_token):
+    decoded_token = decode_token(access_token)
+    db_token = auth.TokenBlocklist(
+        jti=decoded_token['jti'],
+        token_type=decoded_token['type'],
+        user_id=decoded_token[config.config.get('JWT_IDENTITY_CLAIM')],
+        expires_at=datetime.fromtimestamp(decoded_token['exp'])
+    )
+    db.session.add(db_token)
+    db.session.commit()
+
+
 @register_blueprint.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -49,6 +63,8 @@ def login():
 
     access_token = create_access_token(identity=user_found.id)
     refresh_token = create_refresh_token(identity=user_found.id)
+
+    add_token_to_database(access_token)
 
     return jsonify({'access_token': access_token, 'refresh_token': refresh_token}), 200
     

@@ -1,0 +1,29 @@
+.add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid grey; /* Change border color to grey */
+    border-radius: 8px; /* Match ClientCard border radius */
+    padding: 20px; /* Adjust as needed */
+    cursor: pointer; /* Indicate it's clickable */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Match ClientCard shadow */
+}
+
+.add-card-icon {
+    font-size: 24px; /* Adjust size as needed */
+    background-color: #f0f0f0; /* Background color */
+    border-radius: 50%; /* Circular shape */
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remove text shadow */
+.add-card h3 {
+    margin: 0;
+    font-size: 18px;
+    text-shadow: none; /* Ensure no text shadow */
+}

@@ -1,0 +1,82 @@
+.client-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  max-width: 300px;
+  position: relative;
+  border: 1px solid grey;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  width: 50px; /* Adjust size as needed */
+  height: 50px; /* Adjust size as needed */
+  border-radius: 50%; /* Makes the image circular */
+  object-fit: cover; /* Ensures the image covers the area */
+  margin-right: 12px;
+}
+
+.card-title-container {
+  text-align: left;
+}
+
+.card-title,
+.card-description {
+  text-align: left;
+}
+
+.card-title-container h3 {
+  margin: 0;
+  font-size: 18px;
+  text-shadow: none; /* Ensure no text shadow */
+}
+
+.card-title-container p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #666;
+  text-shadow: none; /* Ensure no text shadow */
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tag {
+  background-color: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.engage-button {
+  width: 100%;
+  padding: 8px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: black; /* Change text color to black when not hovering */
+}
+
+.engage-button:hover {
+  color:white /* specify hover color here if needed */; /* Add hover color if desired */
+}
+
+.last-updated {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 12px;
+  color: #999;
+}

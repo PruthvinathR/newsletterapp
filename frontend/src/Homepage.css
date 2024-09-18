@@ -1,0 +1,36 @@
+body {
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center horizontally */
+  align-items: flex-start; /* Align items to the top */
+  min-height: 100vh; /* Ensure full viewport height */
+  margin: 0; /* Remove default margin */
+  text-align: center; /* Center text alignment */
+  width: 100%; /* Set body width to 100% */
+  padding-top: 0; /* Remove any top padding */
+}
+
+.homepage {
+  color: black;
+  width: 100%; /* Ensure full width */
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  margin: 0; /* Remove any default margin */
+  padding-top: 0; /* Remove any top padding */
+  min-height: 120vh; /* Increase min-height to push content down */
+}
+
+.main-container { /* Adjust this class based on your layout */
+    width: 100%; /* Ensure the main container takes full width */
+    max-width: none; /* Remove any max-width constraints */
+}
+
+/* Add this rule to remove text shadow */
+h1, h2, p { /* Adjust selectors as needed */
+  text-shadow: none; /* Remove any text shadow */
+}
+
+.client-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px; 
+  padding-bottom: 40px; /* Add padding to push content down */
+}

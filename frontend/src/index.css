@@ -1,10 +1,19 @@
 body {
   margin: 0;
+  width: 100%; /* Ensure body takes full width */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Remove the background image */
+  /* background-image: url('https://images.unsplash.com/photo-1605703905070-24220ce7f693?q=80&w=2440&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); */
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-position: center; /* Centers the background image */
+  /* Add any additional styles to match the image aesthetics */
+  color: #fff; /* Example text color to contrast with the background */
+  font-family: 'Arial', sans-serif; /* Example font style */
+  /* ... other styles ... */
 }
 
 code {

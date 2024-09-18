@@ -10,7 +10,7 @@ from flask import Blueprint
 from newsletter_app.controllers.schemas.user import UserCreateSchema, UserSchema
 from marshmallow import ValidationError
 
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 
 register_blueprint = Blueprint('register', __name__)
@@ -54,10 +54,19 @@ def login():
     
 
 
+@register_blueprint.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    user_id = get_jwt_identity()
+    access_token = create_access_token(identity=user_id)
+    return jsonify({'access_token': access_token}), 200
+
+
 @register_blueprint.route('/users', methods=['GET'])
 def get_users():
     users = db.session.query(user.User).all()
     users_list = [u.to_dict() for u in users]  # Convert user objects to dictionaries
     return jsonify(users_list), 200
+    
 
 

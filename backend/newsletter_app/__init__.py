@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 from passlib.context import CryptContext
 from newsletter_app import config
 from flask_marshmallow import Marshmallow
+from datetime import timedelta
 
 
 db = SQLAlchemy()  # Initialize the db object
@@ -20,6 +21,7 @@ def create_app():
     app.config['JWT_SECRET_KEY'] = config.config.JWT_SECRET_KEY
     app.config['JWT_TOKEN_LOCATION'] = config.config.JWT_TOKEN_LOCATION
     app.config['JWT_IDENTITY_CLAIM'] = config.config.JWT_IDENTITY_CLAIM
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 
     db.init_app(app)
     ma.init_app(app)

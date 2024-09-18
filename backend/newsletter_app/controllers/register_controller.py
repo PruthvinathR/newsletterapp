@@ -3,17 +3,17 @@
 from newsletter_app.models import user, auth
 
 from flask import request, jsonify
-from newsletter_app import db, pwd_context
+from newsletter_app import db, pwd_context, jwt
 
 from flask import Blueprint
 
 from newsletter_app.controllers.schemas.user import UserCreateSchema, UserSchema
 from marshmallow import ValidationError
 
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, decode_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, decode_token, get_jwt
 from datetime import datetime
 from newsletter_app import config
-
+from sqlalchemy.orm.exc import NoResultFound
 
 register_blueprint = Blueprint('register', __name__)
 
@@ -69,6 +69,34 @@ def login():
     return jsonify({'access_token': access_token, 'refresh_token': refresh_token}), 200
     
 
+def revoke_token(token_jti, user_id):
+    try:
+        token = db.session.query(auth.TokenBlocklist).filter_by(jti=token_jti, user_id=user_id).one()
+        token.revoked_at = datetime.now()
+        db.session.commit()
+    except NoResultFound as e:
+        raise Exception(f'Could not find token {token_jti} in the database')
+
+
+@register_blueprint.route('/revoke_access', methods=['DELETE'])
+@jwt_required()
+def revoke_access_token():
+    jti = get_jwt()['jti']
+    user_id = get_jwt_identity()
+    revoke_token(jti, user_id)
+    return jsonify({'message': 'Access token revoked'}), 200
+
+
+
+@register_blueprint.route('/revoke_refresh', methods=['DELETE'])
+@jwt_required(refresh=True)
+def revoke_refresh_token():
+    jti = get_jwt()['jti']
+    user_id = get_jwt_identity()
+    revoke_token(jti, user_id)
+    return jsonify({'message': 'Refresh token revoked'}), 200
+
+
 
 @register_blueprint.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
@@ -78,7 +106,27 @@ def refresh():
     return jsonify({'access_token': access_token}), 200
 
 
+def is_token_revoked(jwt_payload):
+    jti = jwt_payload['jti']
+    user_id = jwt_payload[config.config.JWT_IDENTITY_CLAIM]
+
+    try:
+        token = db.session.query(auth.TokenBlocklist).filter_by(jti=jti, user_id=user_id).one()
+        return token.revoked_at is not None
+    except NoResultFound:
+       raise Exception(f'Could not find token {jti} in the database')
+
+
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload):
+    try:
+        return is_token_revoked(jwt_payload)
+    except Exception as e:
+        return True
+
+
 @register_blueprint.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     users = db.session.query(user.User).all()
     users_list = [u.to_dict() for u in users]  # Convert user objects to dictionaries

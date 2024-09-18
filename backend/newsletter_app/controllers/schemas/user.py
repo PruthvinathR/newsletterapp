@@ -6,6 +6,7 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 class UserSchema(SQLAlchemyAutoSchema):
     first_name = String(required=True, error_messages={"required": "First Name is required."})
     last_name = String(required=True, error_messages={"required": "Last Name is required."})
+    organization = String(required=True, error_messages={"required": "Organization is required."})
     email = Email(required=True, error_messages={"required": "Email is required."})
     password = String(required=True, load_only=True, error_messages={"required": "Password is required."})
 
@@ -14,6 +15,13 @@ class UserSchema(SQLAlchemyAutoSchema):
         email = data.get('email')
         if user.User.query.filter_by(email=email).first():
             raise ValidationError(f"Email {email} already exists.")
+        return data
+
+    @validates_schema
+    def validate_organization(self, data, **kwargs):
+        organization = data.get('organization')
+        if user.User.query.filter_by(organization=organization).first():
+            raise ValidationError(f"Organization {organization} already exists.")
         return data
 
     class Meta:

@@ -11,6 +11,7 @@ class User(db.Model):
     id = db.Column("id", db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column("firstname", db.String(255), nullable=False)
     last_name = db.Column("lastname", db.String(255), nullable=False)
+    organization = db.Column("organization", db.String(255), nullable=False, unique=True)
     email = db.Column("email", db.String(255), nullable=False, unique=True)
     _password = db.Column("password", db.String(255), nullable=False)
     subscriptions = db.relationship("NewsLetter", secondary='user_newsletter', back_populates="subscribers", passive_deletes=True)
@@ -23,9 +24,10 @@ class User(db.Model):
     def password(self, value):
         self._password = pwd_context.hash(value)
 
-    def __init__(self, first_name, last_name, email, password):
+    def __init__(self, first_name, last_name, organization, email, password):
         self.first_name = first_name
         self.last_name = last_name
+        self.organization = organization
         self.email = email
         self.password = password
 
@@ -34,7 +36,9 @@ class User(db.Model):
             'id': self.id,
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'organization': self.organization,
             'email': self.email,
             'password': self.password,
             'subscriptions': [subscription.title for subscription in self.subscriptions]
         }
+    

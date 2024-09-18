@@ -14,6 +14,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 from datetime import datetime
 from newsletter_app import config
 from sqlalchemy.orm.exc import NoResultFound
+from newsletter_app.utilities import auth_helpers
 
 register_blueprint = Blueprint('register', __name__)
 
@@ -33,23 +34,6 @@ def create_user():
     return jsonify({'message': 'New user created!', 'user': schema.dump(user_data)}), 201
 
 
-@register_blueprint.errorhandler(ValidationError)
-def handle_validation_error(error):
-    return jsonify(error.messages), 400
-
-
-def add_token_to_database(access_token):
-    decoded_token = decode_token(access_token)
-    db_token = auth.TokenBlocklist(
-        jti=decoded_token['jti'],
-        token_type=decoded_token['type'],
-        user_id=decoded_token[config.config.JWT_IDENTITY_CLAIM],
-        expires_at=datetime.fromtimestamp(decoded_token['exp'])
-    )
-    db.session.add(db_token)
-    db.session.commit()
-
-
 @register_blueprint.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -64,18 +48,9 @@ def login():
     access_token = create_access_token(identity=user_found.id)
     refresh_token = create_refresh_token(identity=user_found.id)
 
-    add_token_to_database(access_token)
+    auth_helpers.add_token_to_database(access_token)
 
     return jsonify({'access_token': access_token, 'refresh_token': refresh_token}), 200
-    
-
-def revoke_token(token_jti, user_id):
-    try:
-        token = db.session.query(auth.TokenBlocklist).filter_by(jti=token_jti, user_id=user_id).one()
-        token.revoked_at = datetime.now()
-        db.session.commit()
-    except NoResultFound as e:
-        raise Exception(f'Could not find token {token_jti} in the database')
 
 
 @register_blueprint.route('/revoke_access', methods=['DELETE'])
@@ -83,9 +58,8 @@ def revoke_token(token_jti, user_id):
 def revoke_access_token():
     jti = get_jwt()['jti']
     user_id = get_jwt_identity()
-    revoke_token(jti, user_id)
+    auth_helpers.revoke_token(jti, user_id)
     return jsonify({'message': 'Access token revoked'}), 200
-
 
 
 @register_blueprint.route('/revoke_refresh', methods=['DELETE'])
@@ -93,9 +67,8 @@ def revoke_access_token():
 def revoke_refresh_token():
     jti = get_jwt()['jti']
     user_id = get_jwt_identity()
-    revoke_token(jti, user_id)
+    auth_helpers.revoke_token(jti, user_id)
     return jsonify({'message': 'Refresh token revoked'}), 200
-
 
 
 @register_blueprint.route('/refresh', methods=['POST'])
@@ -104,25 +77,6 @@ def refresh():
     user_id = get_jwt_identity()
     access_token = create_access_token(identity=user_id)
     return jsonify({'access_token': access_token}), 200
-
-
-def is_token_revoked(jwt_payload):
-    jti = jwt_payload['jti']
-    user_id = jwt_payload[config.config.JWT_IDENTITY_CLAIM]
-
-    try:
-        token = db.session.query(auth.TokenBlocklist).filter_by(jti=jti, user_id=user_id).one()
-        return token.revoked_at is not None
-    except NoResultFound:
-       raise Exception(f'Could not find token {jti} in the database')
-
-
-@jwt.token_in_blocklist_loader
-def check_if_token_revoked(jwt_header, jwt_payload):
-    try:
-        return is_token_revoked(jwt_payload)
-    except Exception as e:
-        return True
 
 
 @register_blueprint.route('/users', methods=['GET'])

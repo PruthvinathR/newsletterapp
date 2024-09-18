@@ -43,7 +43,7 @@ def add_token_to_database(access_token):
     db_token = auth.TokenBlocklist(
         jti=decoded_token['jti'],
         token_type=decoded_token['type'],
-        user_id=decoded_token[config.config.get('JWT_IDENTITY_CLAIM')],
+        user_id=decoded_token[config.config.JWT_IDENTITY_CLAIM],
         expires_at=datetime.fromtimestamp(decoded_token['exp'])
     )
     db.session.add(db_token)

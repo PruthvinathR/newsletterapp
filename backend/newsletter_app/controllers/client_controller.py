@@ -25,3 +25,34 @@ def add_client():
     return jsonify({'message': 'Client added successfully', 'client': schema.dump(client_data)}), 201
 
 
+@client_blueprint.route('/get_client', methods=['GET'])
+@jwt_required()
+def get_client():
+    data = request.json
+    client_id = data.get('id')
+    retrieved_client = client.Client.query.filter_by(id=client_id).first()
+    return jsonify(retrieved_client.to_dict()), 200
+
+
+@client_blueprint.route('/update_client', methods=['PUT'])
+@jwt_required()
+def update_client():
+    data = request.json
+    client_id = data.get('id')
+    retrieved_client = client.Client.query.filter_by(id=client_id).first()
+    schema = ClientSchema()
+    client_data = schema.load(data, session=db.session, instance=retrieved_client)
+    db.session.commit()
+    return jsonify({'message': 'Client updated successfully', 'client': schema.dump(client_data)}), 200
+
+
+@client_blueprint.route('/delete_client', methods=['DELETE'])
+@jwt_required()
+def delete_client():
+    data = request.json
+    client_id = data.get('id')
+    retrieved_client = client.Client.query.filter_by(id=client_id).first()
+    db.session.delete(retrieved_client)
+    db.session.commit()
+    return jsonify({'message': 'Client deleted successfully'}), 200
+

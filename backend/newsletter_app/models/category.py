@@ -18,6 +18,11 @@ class Category(db.Model):
         self.name = name
         self.description = description
 
-    def __repr__(self):
-        return f'<Category {self.name}>'
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'client_id': self.client_id
+        }
     

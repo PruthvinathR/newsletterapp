@@ -33,13 +33,9 @@ def create_app():
 
     # Register blueprints
     from newsletter_app.controllers.register_controller import register_blueprint
-    from newsletter_app.controllers.subscription_controller import subscription_blueprint
-    from newsletter_app.controllers.newsletter_controller import newsletter_blueprint
 
     app.register_blueprint(register_blueprint)
-    app.register_blueprint(subscription_blueprint)
-    app.register_blueprint(newsletter_blueprint)
-
+    
     migrate = Migrate(app, db)
 
     return app

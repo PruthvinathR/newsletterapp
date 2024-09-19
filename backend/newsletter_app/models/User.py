@@ -1,7 +1,8 @@
 from newsletter_app import db, pwd_context
-from newsletter_app.models.news_letter import NewsLetter
-from newsletter_app.models.user_newsletter import UserNewsletter
+
 from sqlalchemy.ext.hybrid import hybrid_property
+
+from newsletter_app.models.client import Client
 
 
 
@@ -14,7 +15,8 @@ class User(db.Model):
     organization = db.Column("organization", db.String(255), nullable=False, unique=True)
     email = db.Column("email", db.String(255), nullable=False, unique=True)
     _password = db.Column("password", db.String(255), nullable=False)
-    subscriptions = db.relationship("NewsLetter", secondary='user_newsletter', back_populates="subscribers", passive_deletes=True)
+    
+    clients = db.relationship("Client", back_populates="user", passive_deletes=True)
 
     @hybrid_property
     def password(self):
@@ -39,6 +41,6 @@ class User(db.Model):
             'organization': self.organization,
             'email': self.email,
             'password': self.password,
-            'subscriptions': [subscription.title for subscription in self.subscriptions]
+            'clients': [client.to_dict() for client in self.clients]
         }
     

@@ -26,8 +26,14 @@ class Client(db.Model):
         self.contact_phone = contact_phone
         self.user_id = user_id
 
-    def __repr__(self):
-        return f'<Client {self.name}>'
-
-# Add this to the User model in user.py:
-# clients = relationship("Client", back_populates="user")
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'location': self.location,
+            'industry': self.industry,
+            'contact_person': self.contact_person,
+            'contact_email': self.contact_email,
+            'contact_phone': self.contact_phone,
+            'user_id': self.user_id
+        }

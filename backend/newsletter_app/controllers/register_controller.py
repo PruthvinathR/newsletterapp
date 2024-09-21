@@ -50,7 +50,9 @@ def login():
 
     auth_helpers.add_token_to_database(access_token)
 
-    return jsonify({'access_token': access_token, 'refresh_token': refresh_token}), 200
+    schema = UserSchema()
+
+    return jsonify({'access_token': access_token, 'refresh_token': refresh_token, 'user': schema.dump(user_found)}), 200
 
 
 @register_blueprint.route('/revoke_access', methods=['DELETE'])

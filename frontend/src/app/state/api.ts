@@ -58,11 +58,11 @@ export interface LoginResponse {
           body: credentials,
         }),
       }),
-      signup: build.mutation<User, {firstName: string, lastName: string, organization: string, email: string, password: string}>({
-        query: ({firstName, lastName, organization, email, password}) => ({
+      signup: build.mutation<LoginResponse, {first_name: string, last_name: string, organization: string, email: string, password: string}>({
+        query: ({first_name, last_name, organization, email, password}) => ({
           url: "/register",
           method: "POST",
-          body: {firstName, lastName, organization, email, password},
+          body: {first_name, last_name, organization, email, password},
         }),
       }),
       getDashboardMetrics: build.query<DashboardMetrics, void>({

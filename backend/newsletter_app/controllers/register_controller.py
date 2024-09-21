@@ -29,9 +29,15 @@ def create_user():
     db.session.add(user_data)
     db.session.commit()
 
+    user_found = user.User.query.filter_by(email=data.get('email')).first()
+    access_token = create_access_token(identity=user_found.id)
+    refresh_token = create_refresh_token(identity=user_found.id)
+
+    auth_helpers.add_token_to_database(access_token)
+
     schema = UserSchema()
 
-    return jsonify({'message': 'New user created!', 'user': schema.dump(user_data)}), 201
+    return jsonify({'access_token': access_token, 'refresh_token': refresh_token, 'user': schema.dump(user_data)}), 201
 
 
 @register_blueprint.route('/login', methods=['POST'])

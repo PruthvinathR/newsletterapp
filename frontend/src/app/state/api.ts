@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { User } from ".";
 
 export interface InboxItem {
     inboxItemId: string;
@@ -29,16 +30,20 @@ export interface Project {
     startDate: string;
     endDate: string;
 }
-  
+
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  user: {
+    first_name: string;
+    last_name: string;
+    organization: string;
+    email: string;
+  };
+}
   
   export interface DashboardMetrics {
     clients: Client[];
-  }
-  
-  export interface User {
-    userId: string;
-    name: string;
-    email: string;
   }
   
   export const api = createApi({
@@ -46,6 +51,20 @@ export interface Project {
     reducerPath: "api",
     tagTypes: ["DashboardMetrics", "Inbox", "Clients", "Projects"],
     endpoints: (build) => ({
+      login: build.mutation<LoginResponse, { email: string; password: string }>({
+        query: (credentials) => ({
+          url: "/login",
+          method: "POST",
+          body: credentials,
+        }),
+      }),
+      signup: build.mutation<User, {firstName: string, lastName: string, organization: string, email: string, password: string}>({
+        query: ({firstName, lastName, organization, email, password}) => ({
+          url: "/register",
+          method: "POST",
+          body: {firstName, lastName, organization, email, password},
+        }),
+      }),
       getDashboardMetrics: build.query<DashboardMetrics, void>({
         query: () => "/dashboard",
         providesTags: ["DashboardMetrics"],
@@ -77,5 +96,7 @@ export interface Project {
     useGetInboxQuery,
     useCreateClientMutation,
     useGetClientsQuery,
+    useLoginMutation,
+    useSignupMutation,
   } = api;
   

@@ -1,22 +1,27 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
-import { setisDarkMode, setIsSidebarCollapsed } from '@/app/state';
-import { Bell, Menu, Moon, Settings, Sun } from 'lucide-react'
+import { setIsAuthenticated, setisDarkMode, setIsSidebarCollapsed, setIsSignupMode, setUser } from '@/app/state';
+import { Bell, Menu, Moon, Settings, Sun, User } from 'lucide-react'
 import Link from 'next/link';
-import React from 'react'
-
+import React, { useState } from 'react'
 
 const Navbar = () => {
 
     const dispatch = useAppDispatch();
+    const user = useAppSelector(
+        (state) => state.global.user
+    );
+
+    const [showLogout, setShowLogout] = useState(false);
+
     const isSidebarCollapsed = useAppSelector(
         (state) => state.global.isSidebarCollapsed
     );
 
     const isDarkMode = useAppSelector(
         (state) => state.global.isDarkMode
-      );
+    );
 
     const toggleSidebar = () => {
         dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
@@ -24,6 +29,22 @@ const Navbar = () => {
 
     const toggleDarkMode = () => {
         dispatch(setisDarkMode(!isDarkMode));
+    }
+
+    const handleLogout = () => {
+        setShowLogout(!showLogout)
+        // Clear Redux storage
+        dispatch(setIsSidebarCollapsed(false));
+        dispatch(setisDarkMode(false));
+        dispatch(setIsSignupMode(false));
+        dispatch(setIsAuthenticated(false));
+        dispatch(setUser({
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            organization: '',
+        }));
     }
 
   return (
@@ -65,13 +86,30 @@ const Navbar = () => {
                 </div>
                 <hr className='w-0 h-7 border border-solid border-l border-gray-300 mx-3'></hr>
                 <div className='flex items-center gap-3 cursor-pointer'>
-                    <div className='w-9 h-9'>image</div>
-                    <span className='font-semibold'>Pruthvi</span>
+                    <div className='w-9 h-9'>
+                        <User className='w-full h-full text-gray-500' />
+                    </div>
+                    <span className='font-semibold'>{user && user.firstName}</span>
                 </div>
             </div>
-            <Link href='/settings'>
-                <Settings className='cursor-pointer text-gray-500' size={24}/>
-            </Link>
+            
+            <div className="relative">
+                <Settings
+                    className='cursor-pointer text-gray-500'
+                    size={24}
+                    onClick={() => setShowLogout(!showLogout)}
+                />
+                {showLogout && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                        <button
+                            onClick={handleLogout}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
 
     </div>

@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsSidebarCollapsed } from '@/app/state';
-import { Archive, CircleDollarSign, Clipboard, Icon, Inbox, Layout, LucideIcon, Menu, Sliders, User, Users, Briefcase } from 'lucide-react'
+import { Archive, CircleDollarSign, Clipboard, Icon, Inbox, Layout, LucideIcon, Menu, Sliders, User, Users, Briefcase, Leaf } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react'
@@ -62,7 +62,7 @@ const Sidebar = () => {
     <div className={sidebarClassNames}>
         {/* TOP LOGO */}
         <div className={`flex gap-3 justify-between md:justify-normal items-center pt-8 ${isSidebarCollapsed ? "px-5" : "px-8"}`}>
-            <div>logo</div>
+            <div><Leaf className='w-6 h-6 text-green-600' /></div>
             <h1 className={`${isSidebarCollapsed? "hidden": "block"} font-extrabold text-2xl`}>CONTEXTI</h1>
         
             <button className='md:hidden px-3 py-3 bg-gray-100 rounded-full hover:bg-blue-100' onClick={toggleSidebar}>

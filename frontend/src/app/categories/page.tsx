@@ -2,18 +2,27 @@
 
 import React from 'react'
 import CategoryCard from '../(components)/Category'
+import Link from 'next/link';
 
 type Props = {}
+
+const ChatboxLink = ({ name }: { name: string }) => {
+  return (
+    <Link href="/chatbox">
+      <CategoryCard name={name} />
+    </Link>
+  )
+}
 
 const CategoriesPage = (props: Props) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-      <CategoryCard name="Suppliers" />
-      <CategoryCard name="Vendors" />
-      <CategoryCard name="Operations" />
-      <CategoryCard name="Customers" />
-      <CategoryCard name="IT" />
-      <CategoryCard name="Competitors" />
+      <ChatboxLink name="Suppliers" />
+      <ChatboxLink name="Vendors" />
+      <ChatboxLink name="Operations" />
+      <ChatboxLink name="Customers" />
+      <ChatboxLink name="IT" />
+      <ChatboxLink name="Competitors" />
     </div>
   )
 }

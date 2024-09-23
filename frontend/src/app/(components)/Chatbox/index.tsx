@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Avatar } from '@mui/material'
 import { Bot, Send, User } from 'lucide-react';
+import { useChatWithBotMutation } from '@/app/state/api';
 
 type Props = {}
 
@@ -11,22 +12,26 @@ interface Message {
     sender: 'human' | 'ai';
 }
 
-const Chatbox = (props: Props) => {
+
+const Chatbox = () => {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const [chatHistory, setChatHistory] = useState<Array<[string, string]>>([]);
+  const [chatHistory, setChatHistory] = useState<Array<{ sender: string, message: string }>>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [chatWithBot, { data: chatResponse, error: chatError, isLoading: isChatLoading }] = useChatWithBotMutation();
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim() === '') return;
-    setMessages([...messages, { text: input, sender: 'human' }]);
-    setChatHistory([...chatHistory, ['human', input]]);
+    setMessages((prevMessages) => [...prevMessages, { text: input, sender: 'human' }]);
+    setChatHistory([...chatHistory, { sender: 'human', message: input }]);
     setIsLoading(true);
+    const query = input;
+    const chat_history = chatHistory;
 
-    // TODO: send message to backend
+    const chatresponse = await chatWithBot({ query, chat_history });
 
-
+    setMessages((prevMessages) => [...prevMessages, { text: chatresponse.data?.response || '', sender: 'ai' }]);
     setInput('');
     setIsLoading(false);
   };

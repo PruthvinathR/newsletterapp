@@ -45,11 +45,15 @@ export interface LoginResponse {
   export interface DashboardMetrics {
     clients: Client[];
   }
+
+  export interface ChatWithBotResponse {
+    response: string;
+  }
   
   export const api = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }),
     reducerPath: "api",
-    tagTypes: ["DashboardMetrics", "Inbox", "Clients", "Projects"],
+    tagTypes: ["DashboardMetrics", "Inbox", "Clients", "Projects", "Chats"],
     endpoints: (build) => ({
       login: build.mutation<LoginResponse, { email: string; password: string }>({
         query: (credentials) => ({
@@ -88,6 +92,14 @@ export interface LoginResponse {
         query: () => "/clients",
         providesTags: ["Clients"],
       }),
+      chatWithBot: build.mutation<ChatWithBotResponse, { query: string; chat_history: { sender: string; message: string }[] }>({
+        query: ({ query, chat_history }) => ({
+          url: "/chat_with_bot",
+          method: "POST",
+          body: { query, chat_history },
+        }),
+        invalidatesTags: ["Chats"],
+      }),
     }),
   });
   
@@ -98,5 +110,6 @@ export interface LoginResponse {
     useGetClientsQuery,
     useLoginMutation,
     useSignupMutation,
+    useChatWithBotMutation,
   } = api;
   

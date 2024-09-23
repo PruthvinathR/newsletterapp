@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from ".";
+
 
 export interface InboxItem {
     inboxItemId: string;

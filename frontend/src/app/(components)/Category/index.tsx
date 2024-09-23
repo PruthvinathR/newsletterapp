@@ -1,5 +1,5 @@
 import React from 'react'
-import { Building2, DollarSign, Briefcase, Users, Laptop, Target, Crosshair } from 'lucide-react';
+import { Building2, DollarSign, Briefcase, Users, Laptop, Crosshair } from 'lucide-react';
 
 type CategoryProps = {
     name: string;

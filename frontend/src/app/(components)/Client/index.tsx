@@ -19,6 +19,7 @@ const ClientCard = ({clientName, description, clientId}: ClientCardProps) => {
                         alt="Nike Logo"
                         width={64}
                         height={64}
+                        id={clientId}
                     />
                 ) : (
                 <Building2

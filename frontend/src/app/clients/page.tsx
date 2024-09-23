@@ -2,10 +2,9 @@
 
 import React from 'react'
 import ClientCard from '../(components)/Client';
-import { Building2, LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 
-type Props = {}
+
 
 const ClientLink = ({href, clientName, clientId, description}: {href: string, clientName: string, clientId: string, description: string}) => {
   return (
@@ -15,7 +14,7 @@ const ClientLink = ({href, clientName, clientId, description}: {href: string, cl
   )
 }
 
-const ClientsPage = (props: Props) => {
+const ClientsPage = () => {
     
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">

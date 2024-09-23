@@ -24,7 +24,6 @@ const DashboardLayout = ({children}: {children: React.ReactNode}) => {
   );
 
   useEffect(() => {
-    console.log(`isAuthenticated ${isAuthenticated}`);
     if(isDarkMode) {
       document.documentElement.classList.add("dark");
     } else {

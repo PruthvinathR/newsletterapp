@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsSidebarCollapsed } from '@/app/state';
-import { Archive, CircleDollarSign, Clipboard, Icon, Inbox, Layout, LucideIcon, Menu, Sliders, User, Users, Briefcase, Leaf } from 'lucide-react'
+import { Inbox, Layout, LucideIcon, Menu, Users, Leaf } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react'

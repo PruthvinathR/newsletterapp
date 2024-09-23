@@ -2,13 +2,9 @@
 
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsAuthenticated, setIsSignupMode, setUser, User } from '@/app/state';
-import { useLoginMutation, useSignupMutation } from '@/app/state/api';
+import { LoginResponse, useLoginMutation, useSignupMutation } from '@/app/state/api';
 import React, { useState } from 'react'
 import { jwtDecode } from 'jwt-decode';
-
-type Props = {
-
-}
 
 type DecodedToken = {
     sub: string;
@@ -17,9 +13,8 @@ type DecodedToken = {
     email: string;
 }
 
-const AuthComponent =  (props: Props) => {
+const AuthComponent = () => {
     const dispatch = useAppDispatch();
-    const isAuthenticated = useAppSelector((state) => state.global.isAuthenticated);
     const isSignupMode = useAppSelector((state) => state.global.isSignupMode);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -27,14 +22,12 @@ const AuthComponent =  (props: Props) => {
     const [lastName, setLastName] = useState('');
     const [organization, setOrganization] = useState('');
 
-    const [login, { data: loginData, error: loginError, isLoading: isLoginLoading }] = useLoginMutation();
-    const [signup, { data: signupData, error: signupError, isLoading: isSignupLoading }] = useSignupMutation();
+    const [login] = useLoginMutation();
+    const [signup] = useSignupMutation();
 
     const [showLoginError, setShowLoginError] = useState(false);
     const [showSignupError, setShowSignupError] = useState(false);
-    const [showPasswordError, setShowPasswordError] = useState(false);
 
-    
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         
@@ -56,7 +49,7 @@ const AuthComponent =  (props: Props) => {
         const last_name = lastName;
         try {
             const result = await signup({first_name, last_name, organization, email, password});
-            handleAuthSuccess(result.data);
+            handleAuthSuccess(result.data as LoginResponse);
         } catch (error) {
             console.error('Signup failed:', error);
         }
@@ -65,14 +58,14 @@ const AuthComponent =  (props: Props) => {
     const handleLogin = async () => {
         try {
             const result = await login({email, password});
-            handleAuthSuccess(result.data);
+            handleAuthSuccess(result.data as LoginResponse);
         } catch (error) {
             setShowLoginError(true);
             console.error('Login failed:', error);
         }
     };
 
-    const handleAuthSuccess = (data: any) => {
+    const handleAuthSuccess = (data: LoginResponse) => {
         if (data && data.access_token) {
             localStorage.setItem('token', data.access_token);
 

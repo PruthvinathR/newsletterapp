@@ -1,8 +1,7 @@
 import React from 'react'
 
-type Props = {}
 
-const Inbox = (props: Props) => {
+const Inbox = () => {
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="text-center">

@@ -5,7 +5,6 @@ import { Avatar } from '@mui/material'
 import { Bot, Send, User } from 'lucide-react';
 import { useChatWithBotMutation } from '@/app/state/api';
 
-type Props = {}
 
 interface Message {
     text: string;
@@ -19,7 +18,7 @@ const Chatbox = () => {
   const [input, setInput] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ sender: string, message: string }>>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [chatWithBot, { data: chatResponse, error: chatError, isLoading: isChatLoading }] = useChatWithBotMutation();
+  const [chatWithBot] = useChatWithBotMutation();
 
   const handleSendMessage = async () => {
     if (input.trim() === '') return;

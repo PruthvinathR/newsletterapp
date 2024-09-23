@@ -3,7 +3,6 @@
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { setIsAuthenticated, setisDarkMode, setIsSidebarCollapsed, setIsSignupMode, setUser } from '@/app/state';
 import { Bell, Menu, Moon, Settings, Sun, User } from 'lucide-react'
-import Link from 'next/link';
 import React, { useState } from 'react'
 
 const Navbar = () => {

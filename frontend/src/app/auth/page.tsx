@@ -3,9 +3,8 @@
 import React from 'react'
 import AuthComponent from '../(components)/Auth';
 
-type Props = {}
 
-const AuthenticationPage = (props: Props) => {
+const AuthenticationPage = () => {
   return (
     <AuthComponent />
   )

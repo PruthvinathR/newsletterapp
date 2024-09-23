@@ -93,12 +93,12 @@ const Sidebar = () => {
                 label="Clients"
                 isCollapsed={isSidebarCollapsed}
             />
-            <SidebarLink
+            {/* <SidebarLink
                 href='/projects'
                 icon={Briefcase}
                 label="Projects"
                 isCollapsed={isSidebarCollapsed}
-            />
+            /> */}
         </div>
 
         {/* FOOTER */}
